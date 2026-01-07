@@ -96,6 +96,7 @@ Constraints:
 
 A warm-up period prevents initialization artifacts.
 
+
 ---
 
 ## What v2 Evaluates
@@ -131,6 +132,7 @@ The Kalman estimator is expected to:
 - Avoid excessive lag
 
 Persistence remains the default forecast outside this estimator.
+Forecasting is performed conditionally using estimator confidence; in low-confidence regimes the system explicitly falls back to persistence.
 
 ---
 
