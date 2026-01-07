@@ -24,6 +24,8 @@ Persistence is treated as the default short-horizon behavior, while Kalman contr
 This design aligns with established practice in control systems and sensor fusion, where estimation precedes any decision or prediction layer.
 
 ---
+## V3 - Forecasting is performed conditionally using estimator confidence; in low-confidence regimes the system explicitly falls back to persistence.
+---
 
 ## Key Difference Between v1 and v2
 
