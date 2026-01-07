@@ -1,4 +1,6 @@
-# Prediction of Noisy Data in Short Time Intervals
+# Short-Horizon Estimation of Noisy Signals in Chaotic Systems
+
+## Using Cryptocurrency Price Streams as a High-Frequency Sensor Proxy
 
 This project studies how different modeling choices behave when predicting or estimating signals in **highly noisy, non-stationary environments**, 
 using BTC price data purely as a **proxy for a chaotic sensor signal**.
