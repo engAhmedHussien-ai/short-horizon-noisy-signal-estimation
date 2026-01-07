@@ -21,6 +21,42 @@ from datetime import datetime, timezone
 
 import numpy as np
 import ccxt
+import os
+
+
+
+
+
+def save_state(state_file, x, P, Q_scale, R_scale, last_ts):
+    np.savez(
+        state_file,
+        x=x,
+        P=P,
+        Q_scale=Q_scale,
+        R_scale=R_scale,
+        last_ts=last_ts.timestamp() if last_ts else None
+    )
+
+
+def load_state(state_file):
+    if not os.path.exists(state_file):
+        return None
+
+    data = np.load(state_file, allow_pickle=True)
+    x = data["x"]
+    P = data["P"]
+    Q_scale = float(data["Q_scale"])
+    R_scale = float(data["R_scale"])
+    ts_val = data["last_ts"].item()
+
+    last_ts = (
+        datetime.fromtimestamp(ts_val, tz=timezone.utc)
+        if ts_val is not None
+        else None
+    )
+
+    return x, P, Q_scale, R_scale, last_ts
+
 
 
 # ===============================
@@ -112,15 +148,26 @@ def run():
     tf = args.timeframe
     horizon = args.horizon
     out_csv = args.out
+    CONF_THRESHOLD = 0.55
+    save_counter = 0
+    state_file = f"kalman_state_v3_{symbol.replace('/', '_')}_{tf}.npz"
+
+
 
     init_csv(out_csv)
 
     x, P, F, H, Q_base, R_base = init_kalman()
     Q_scale = 1.0
     R_scale = 1.0
-
-    CONF_THRESHOLD = 0.55
     last_ts = None
+
+    loaded = load_state(state_file)
+    if loaded is not None:
+        x, P, Q_scale, R_scale, last_ts = loaded
+        print("[INFO] Kalman state restored from disk")
+    else:
+        print("[INFO] Starting with fresh Kalman state")
+
 
     print("[INFO] Kalman v3 started (confidence-gated forecasting)")
     print("[INFO] Press Ctrl+C to stop")
@@ -193,16 +240,32 @@ def run():
             ])
 
             # ---------- CONSOLE ----------
-            print(
-                f"[{close_dt.strftime('%Y-%m-%d %H:%M:%S')}] "
-                f"raw={close:,.2f} | fair={fair_price:,.2f} | "
-                f"vel={fair_velocity:,.2f} | "
-                f"conf={confidence:.3f} | "
-                f"mode={mode}"
-            )
+            if mode == "KALMAN":
+                print(
+                    f"[{close_dt.strftime('%Y-%m-%d %H:%M:%S')}] "
+                    f"raw={close:,.2f} | fair={fair_price:,.2f} | "
+                    f"vel={fair_velocity:,.2f} | "
+                    f"conf={confidence:.3f} | "
+                    f"FORECAST(+{horizon})={forecast:,.2f}"
+                )
+            else:
+                print(
+                    f"[{close_dt.strftime('%Y-%m-%d %H:%M:%S')}] "
+                    f"raw={close:,.2f} | fair={fair_price:,.2f} | "
+                    f"vel={fair_velocity:,.2f} | "
+                    f"conf={confidence:.3f} | mode=PERSIST"
+                )
+                
+            save_counter += 1
+            if save_counter % 5 == 0:  # every 5 minutes
+                save_state(state_file, x, P, Q_scale, R_scale, last_ts)
+
+
+
 
         except KeyboardInterrupt:
-            print("\n[INFO] Stopped by user")
+            save_state(state_file, x, P, Q_scale, R_scale, last_ts)
+            print("\n[INFO] State saved. Stopped by user.")
             break
         except Exception as e:
             print("[WARN]", str(e))
