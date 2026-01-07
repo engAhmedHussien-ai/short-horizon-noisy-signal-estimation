@@ -31,7 +31,7 @@ Where:
 ________________________________________
 State Transition Model (Constant Velocity)
 The system assumes locally linear dynamics:
-xt+1=[1101]xt+wtx_{t+1} = \begin{bmatrix} 1 & 1 \\ 0 & 1 \end{bmatrix} x_t + w_txt+1=[1011]xt+wt 
+![State Vector](figures/state_vector.png)
 Where:
 •	wtw_twt represents process noise
 •	Velocity is constrained to maintain physical plausibility
