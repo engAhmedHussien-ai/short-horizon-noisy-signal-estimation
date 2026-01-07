@@ -59,3 +59,8 @@ During one live run, the system detected a brief coherent interval and produced 
 
 conf = 0.565 → Kalman extrapolation enabled
 FORECAST(+5) ≈ fair_price + 5 × velocity
+
+### Transition from v3 to v4
+
+While v3 validated confidence-gated extrapolation under noisy, short-lived operation, its behavior remained intentionally conservative and event-sparse. Version 4 extends this foundation by introducing
+**temporal robustness**: extrapolation is enabled only after sustained confidence, Kalman-active periods are treated as coherent windows rather than isolated ticks, and forecast error is evaluated exclusively when the system chooses to act. These changes do not alter the estimator or confidence formulation; instead, they improve decision stability, interpretability, and evaluation honesty under limited runtime and highly non-stationary conditions.
