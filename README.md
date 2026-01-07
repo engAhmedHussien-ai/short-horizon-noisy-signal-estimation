@@ -106,6 +106,9 @@ Although demonstrated on BTC price data, the methodology applies directly to:
 •	Real-time monitoring systems
 The asset is incidental — the estimator is the contribution.
 ________________________________________
+# How to run 
+python kalman.py --symbol BTC/USDT --timeframe 1m --horizons 5 10 20 --tol 0.01
+________________________________________
 # Future Work
 Possible extensions include:
 •	Regime-aware switching models
