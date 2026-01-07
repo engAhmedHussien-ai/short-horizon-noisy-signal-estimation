@@ -24,6 +24,7 @@ Equations are rendered as images to ensure consistent display across GitHub them
 ________________________________________
 # State Vector
 The latent state is defined as:
+
 ![State Vector](figures/state_vector.png)
 
 Where:
@@ -32,14 +33,18 @@ Where:
 ________________________________________
 # State Transition Model (Constant Velocity)
 The system assumes locally linear dynamics:
+
 ![State Vector](figures/state_transition.png)
+
 Where:
 •	wtw_twt represents process noise
 •	Velocity is constrained to maintain physical plausibility
 ________________________________________
 # Measurement Model
 Only the price component is observed:
+
 ![State Vector](figures/measurement_model.png)
+
 Where:
 •	vtv_tvt represents measurement noise
 •	Measurement noise is adapted online using innovation statistics
