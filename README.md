@@ -1,4 +1,4 @@
-## Adaptive Online Kalman Estimator
+# Adaptive Online Kalman Estimator
 Short-Horizon Forecasting under Non-Stationarity
 A disciplined benchmark study of an online adaptive Kalman state-space estimator versus naïve baselines in a noisy, non-stationary time series.
 ________________________________________
@@ -25,6 +25,7 @@ ________________________________________
 # State Vector
 The latent state is defined as:
 ![State Vector](figures/state_vector.png)
+
 Where:
 •	ptp_tpt is the estimated price
 •	vtv_tvt is the estimated short-term velocity
